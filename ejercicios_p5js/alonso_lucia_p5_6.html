@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>A6 — Variables (estado + movimiento simple)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+
+  <body>
+  <script>
+  // =====================================================
+  // A6 — Variables (estado + movimiento simple)
+  // Autora: Alonso, Lucía
+  // Qué hace: el sol se desplaza horizontalmente sobre el cielo.
+  // Conceptos: variables, estado, setup/draw, width/height.
+  // =====================================================
+
+  // --- Variables globales ---
+  let x, y, v, d, r;
+
+  function setup() {
+    createCanvas(400, 400);
+
+    // Tamaño del sol relativo al lienzo
+    d = min(width, height) * 0.2;
+    r = d / 2;
+
+    // Posición inicial (entra desde la izquierda)
+    x = -r;
+    y = height * 0.25;
+
+    // Velocidad relativa al ancho
+    v = width / 400;
+  }
+
+  function draw() {
+    // --- Fondo: cielo y tierra ---
+    background(135, 206, 235); // cielo
+    noStroke();
+    fill(34, 139, 34);         // tierra
+    rect(0, height / 2, width, height / 2);
+
+    // --- Sol (con movimiento) ---
+    fill(255, 223, 0);
+    circle(x, y, d);
+
+    // --- Arcoíris ---
+    noFill();
+    strokeWeight(5);
+    stroke(255, 0, 0);
+    arc(200, 300, 300, 200, PI, TWO_PI);
+    stroke(255, 165, 0);
+    arc(200, 300, 280, 180, PI, TWO_PI);
+    stroke(255, 255, 0);
+    arc(200, 300, 260, 160, PI, TWO_PI);
+    stroke(0, 255, 0);
+    arc(200, 300, 240, 140, PI, TWO_PI);
+    stroke(0, 0, 255);
+    arc(200, 300, 220, 120, PI, TWO_PI);
+    stroke(75, 0, 130);
+    arc(200, 300, 200, 100, PI, TWO_PI);
+    stroke(238, 130, 238);
+    arc(200, 300, 180, 80, PI, TWO_PI);
+
+    // --- Casa ---
+    noStroke();
+    fill(255, 0, 0);
+    rect(100, 200, 150, 150);
+    fill(139, 69, 19);
+    triangle(100, 200, 250, 200, 175, 100);
+
+    // --- Ventanas ---
+    fill(255);
+    rect(120, 220, 30, 30);
+    rect(150, 220, 30, 30);
+
+    // --- Puerta ---
+    fill(139, 69, 19);
+    rect(140, 270, 40, 80);
+
+    // --- Coche ---
+    fill(0, 255, 0);
+    rect(50, 320, 100, 40);
+    fill(0);
+    ellipse(60, 360, 30, 30);
+    ellipse(140, 360, 30, 30);
+
+    // --- Movimiento del sol ---
+    x = x + v;
+
+    // --- Texto informativo ---
+    fill(0);
+    textSize(14);
+    textAlign(LEFT, TOP);
+    text("A6 — Variables (estado + movimiento simple)", 10, 10);
+  }
+  </script>
+  </body>
+</html>
