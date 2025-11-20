@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title> T7 · v1 - Sol cruzando</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+
+  <body>
+  <script>
+  
+  //Sol
+  let x_s, y_S, v_s, d_s, r_s
+  
+  //Luna
+  let x_l, y_l, v_l, d_l, r_l
+   
+  // Cielos adelantados
+  let x_cs, x_cl, adelanto_s, adelanto_l;
+
+  // Globo
+  let xG, yG, vyG, Sg, cuerda;
+
+  // Árbol
+  let S, troncoW, troncoH, copaD;
+
+  // Coche
+  let xCv, vxCv, Lv, Hv;
+
+  function setup() {
+    createCanvas(400, 400);
+
+    // Sol
+    d_s = width * 0.18;
+    r_s = d_s * 0.5;
+    x_s = -r_s;
+    y_s = height * 0.25;
+    v_s = width * 0.0025;
+
+    // Luna
+    d_l = width * 0.22;
+    r_l = d_l * 0.5;
+    x_l = -width - r_l;
+    y_l = height * 0.45;
+    v_l = v_s;
+
+    // Adelantos
+    adelanto_s = width * 0.1;
+    adelanto_l = width * 0.1;
+
+    x_cs = x_s + adelanto_s;
+    x_cl = x_l + adelanto_l;
+
+    
+    // Globo
+    Sg = 0.08 * height;
+    cuerda = 1.2 * Sg;
+
+    xG = width * 0.8;
+    yG = height * 0.8;
+    vyG = height * 0.002;
+
+    
+    // Árbol
+    S = 0.1 * height;
+    troncoW = 0.3 * S;
+    troncoH = 1.2 * S;
+    copaD  = 1.1 * S;
+	
+    // Coche 
+    Lv = width * 0.25;   
+    Hv = Lv * 0.4;         
+    xCv = -Lv;             
+    vxCv = width * 0.003;  
+  }
+
+  function draw() {
+  
+    // Fondo 
+    background(135, 206, 235); 
+    noStroke();
+    fill(34, 139, 34);         
+    rect(0, height/2, width, height/2);
+
+    // Cielos adelantados
+    fill(0, 0, 200);
+    rect(x_cs, 0, width, height * 0.5);
+
+    fill(200);
+    rect(x_cl, 0, width, height * 0.5);
+
+    // Sol
+    fill(255, 223, 0);
+    circle(x_s, y_s, d_s);
+
+    // Luna
+    fill(255);
+    circle(x_l, y_l, d_l);
+
+    // Movimiento sol y luna
+    x_s += v_s;
+    x_cs += v_s;
+
+    x_l += v_l;
+    x_cl += v_l;
+
+    // Globo
+    fill(255, 80, 80);
+    circle(xG, yG, Sg);
+
+    stroke(60);
+    line(xG, yG + 0.5 * Sg, xG, yG + 0.5 * Sg + cuerda);
+    noStroke();
+
+    yG = yG - vyG; 
+	
+    // Árbol
+    fill(120, 80, 40);
+    rect(
+      0.15 * width - 0.5 * troncoW,
+      0.8 * height - troncoH,
+      troncoW,
+      troncoH
+    );
+
+    fill(40, 140, 60);
+    circle(
+      0.15 * width,
+      0.8 * height - troncoH - 0.3 * S,
+      copaD
+    );
+
+    // Crecimiento
+    S = S + 0.0008 * height;
+    troncoW = 0.3 * S;
+    troncoH = 1.2 * S;
+    copaD  = 1.1 * S;
+ 
+    //  Arcoíris
+    noFill();
+     strokeWeight(5);
+     let ay = 320; 
+
+    stroke(255, 0, 0);   arc(200, ay, 300, 200, PI, TWO_PI);
+    stroke(255, 165, 0); arc(200, ay, 280, 180, PI, TWO_PI);
+    stroke(255, 255, 0); arc(200, ay, 260, 160, PI, TWO_PI);
+    stroke(0, 255, 0);   arc(200, ay, 240, 140, PI, TWO_PI);
+    stroke(0, 0, 255);   arc(200, ay, 220, 120, PI, TWO_PI);
+    stroke(75, 0, 130);  arc(200, ay, 200, 100, PI, TWO_PI);
+  
+  // Casa
+    fill(255, 0, 0);
+    stroke(0);
+    rect(100, 200, 150, 150);
+
+    fill(139, 69, 19);
+    stroke(0);
+    triangle(100, 200, 250, 200, 175, 100);
+
+
+
+    fill(255);
+    stroke(0);
+    rect(120, 220, 30, 30);
+    rect(150, 220, 30, 30);
+
+    fill(139, 69, 19);
+    stroke(0);
+    rect(140, 270, 40, 80);
+
+    // Coche 
+    fill(0, 255, 0);
+    rect(
+      xCv,
+      0.75 * height,
+      Lv,
+      Hv
+    );
+
+    fill(0);
+    ellipse(xCv + 0.2 * Lv, 0.75 * height + Hv, 0.3 * Lv, 0.3 * Lv);
+    ellipse(xCv + 0.8 * Lv, 0.75 * height + Hv, 0.3 * Lv, 0.3 * Lv);
+
+    // Movimiento coche 
+    xCv = xCv + vxCv;
+
+  
+
+  }
+  </script>
+  </body>
+</html>
