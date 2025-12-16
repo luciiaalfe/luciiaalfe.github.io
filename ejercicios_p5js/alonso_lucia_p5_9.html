@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>T8 — Sistema Solar (Lucía Alonso) + Luna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+
+  <body>
+  <script>
+   
+  // Centro del sistema
+  let centerX, centerY, sunSize, R1;
+
+  
+  let mercurio_R, mercurio_D, mercurio_theta, mercurio_omega;
+  let venus_R,    venus_D,    venus_theta,    venus_omega;
+  let tierra_R,   tierra_D,   tierra_theta,   tierra_omega;
+  let marte_R,    marte_D,    marte_theta,    marte_omega;
+  let jupiter_R,  jupiter_D,  jupiter_theta,  jupiter_omega;
+  let saturno_R,  saturno_D,  saturno_theta,  saturno_omega; 
+  let urano_R,    urano_D,    urano_theta,    urano_omega;
+  let neptuno_R,  neptuno_D,  neptuno_theta,  neptuno_omega;
+  let luna_R, luna_D, luna_theta, luna_omega;
+  let tierraX, tierraY, lunaX, lunaY;
+
+  function setup() {
+    createCanvas(1200, 1200);
+
+    centerX = width/2;
+    centerY = height/2;
+    sunSize = 0.10 * width;
+    R1= 0.06 * width;
+
+    // Diametro planeta
+    mercurio_D  =0.10*sunSize;
+    venus_D     = 0.25*sunSize;
+    tierra_D    =0.26*sunSize;
+    marte_D     = 0.14*sunSize;
+    jupiter_D   = 0.25*sunSize;
+    saturno_D   =0.14*sunSize;
+    urano_D     = 0.18*sunSize;
+    neptuno_D   =0.25*sunSize;
+
+    // Radios de orbita
+    mercurio_R  = 1*R1;
+    venus_R     = 2*R1;
+    tierra_R    = 3*R1;
+    marte_R     = 4*R1;
+    jupiter_R   = 5*R1;
+    saturno_R   = 6*R1;
+    urano_R     = 7*R1;
+    neptuno_R   = 8*R1; 
+   
+    // Ángulos iniciales
+    mercurio_theta = 0;
+    venus_theta    = 3.14/3;
+    tierra_theta   = 3.14/2;
+    marte_theta    = 3.14;
+    jupiter_theta  = 4*3.14/3;
+    saturno_theta  = 5*3.14/3;
+    urano_theta    = 2.2*3.14;
+    neptuno_theta  = 2.6*3.14;
+
+    // Velocidades angulares
+    mercurio_omega = 0.030;
+    venus_omega    = 0.012;
+    tierra_omega   = 0.02;
+    marte_omega    = 0.015;
+    jupiter_omega  = 0.008;
+    saturno_omega  = 0.006;
+    urano_omega    = 0.002;
+    neptuno_omega  = 0.0015;
+
+    // Luna 
+    luna_D = 0.3 * tierra_D;     
+    luna_R = 1.5 * tierra_D;      
+    luna_theta = 0;
+    luna_omega = 0.06;            
+  }
+
+  function draw() {
+    background(0);
+
+    noStroke();
+
+    
+    // SOL
+    fill(255, 200, 0);
+    circle(centerX, centerY, sunSize);
+
+
+    // ÓRBITAS 
+    noFill();
+    stroke(255);
+    strokeWeight(1);
+
+    circle(centerX, centerY, mercurio_R * 2);
+    circle(centerX, centerY, venus_R * 2);
+    circle(centerX, centerY, tierra_R * 2);
+    circle(centerX, centerY, marte_R * 2);
+    circle(centerX, centerY, jupiter_R * 2);
+    circle(centerX, centerY, saturno_R * 2);
+    circle(centerX, centerY, urano_R * 2);
+    circle(centerX, centerY, neptuno_R * 2);
+
+    noStroke();
+
+   
+    // MERCURIO
+    fill(180);
+    circle(centerX + cos(mercurio_theta) * mercurio_R, centerY + sin(mercurio_theta) * mercurio_R, mercurio_D);
+
+    // VENUS
+    fill(255, 220, 120);
+    circle(centerX + cos(venus_theta) * venus_R, centerY + sin(venus_theta) * venus_R, venus_D);
+    
+    // TIERRA
+    fill(0, 120, 255);
+    tierraX = centerX + cos(tierra_theta) * tierra_R;
+    tierraY = centerY + sin(tierra_theta) * tierra_R;
+    circle(tierraX, tierraY, tierra_D);
+
+    // MARTE
+    fill(255, 80, 60);
+    circle(centerX + cos(marte_theta) * marte_R, centerY + sin(marte_theta) * marte_R, marte_D);
+
+    // JÚPITER
+    fill(255, 150, 70);
+    circle(centerX + cos(jupiter_theta) * jupiter_R, centerY + sin(jupiter_theta) * jupiter_R, jupiter_D);
+
+    // SATURNO
+    fill(230, 200, 150);
+    circle(centerX + cos(saturno_theta) * saturno_R, centerY + sin(saturno_theta) * saturno_R, saturno_D);
+
+    // URANO
+    fill(150, 230, 255);
+    circle(centerX + cos(urano_theta) * urano_R, centerY + sin(urano_theta) * urano_R, urano_D);
+
+    // NEPTUNO
+    fill(100, 140, 255);
+    circle(centerX + cos(neptuno_theta) * neptuno_R, centerY + sin(neptuno_theta) * neptuno_R, neptuno_D);
+
+    // ÓRBITA DE LA LUNA
+    noFill();
+    stroke(180);
+    strokeWeight(1);
+    circle(tierraX, tierraY, luna_R * 2);
+
+    // LUNA 
+    noStroke();
+    fill(200);
+    lunaX = tierraX + cos(luna_theta) * luna_R;
+    lunaY = tierraY + sin(luna_theta) * luna_R;
+    circle(lunaX, lunaY, luna_D);
+
+    //ACTUALIZACIÓN DE VARIABLES
+     mercurio_theta = mercurio_theta + mercurio_omega;
+     venus_theta    = venus_theta + venus_omega;
+     tierra_theta   = tierra_theta + tierra_omega;
+     marte_theta    = marte_theta + marte_omega;
+     jupiter_theta  = jupiter_theta + jupiter_omega;
+     saturno_theta  = saturno_theta + saturno_omega;
+     urano_theta    = urano_theta + urano_omega;
+     neptuno_theta  = neptuno_theta + neptuno_omega;
+     luna_theta     = luna_theta + luna_omega;
+          
+  }
+  </script>
+  </body>
+</html>
