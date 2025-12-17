@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Tarea 11 — If + Luna</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+
+<body>
+<script>
+  let xS, yS, dS, rS, vS;   // Sol
+  let xL, yL, dL, rL, vL;   // Luna
+
+  function setup() {
+    createCanvas(600, 800);
+
+    // SOL
+    dS = min(width, height) * 0.20;
+    rS = dS / 2;
+    xS = -rS;              
+    yS = height / 4;
+    vS = width / 400;
+
+    // LUNA
+    dL = dS * 0.5;
+    rL = dL / 2;
+    xL = -width - rL;     
+    yL = height / 3;
+    vL = vS;               
+  }
+
+  function draw() {
+
+    if (xS <= width + rS) {
+      background(0, 0, 255);   
+    } else {
+      background(10);          
+    }
+
+    noStroke();
+    fill(20, 120, 40);
+    rect(0, 0.8 * height, width, 0.2 * height);
+
+    noStroke();
+    fill(245, 234, 10);
+    circle(xS, yS, dS);
+
+    noStroke();
+    fill(200);
+    circle(xL, yL, dL);
+
+    xS = xS + vS;
+    xL = xL + vL;
+
+    if (xS > 2 * width + rS) {
+      xS = -rS;
+      xL = -width - rL;
+    }
+
+    textSize(14);
+    fill(255);
+    text("xS: " + nf(xS, 1, 2), 10, 20);
+    text("xL: " + nf(xL, 1, 2), 10, 40);
+  }
+</script>
+</body>
+</html>
