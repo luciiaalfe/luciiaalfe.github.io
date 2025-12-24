@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Tarea 12 — Calendario de texto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+
+<body>
+<script>
+
+  let xS, yS, dS, rS, vS;   
+  let xL, yL, dL, rL, vL;   
+  let dia, mes, año;       
+
+  function setup() {
+    createCanvas(900, 500);
+
+    //SOL 
+    dS = 0.18 * width;
+    rS = dS / 2;
+    yS = 0.35 * height;
+    xS = -rS;
+    vS = width / 400;
+
+    //LUNA
+    dL = dS * 0.5;
+    rL = dL / 2;
+    xL = -width - rL;
+    yL = 0.35 * height;
+    vL = vS;
+
+    //CALENDARIO
+    dia  = 31;
+    mes  = 08;
+    año = 2008;
+  }
+
+  function draw() {
+    
+    //FONDO
+    if (xS <= width + rS) {
+      background(135, 206, 235);   
+    } else {
+      background(0);               
+    }
+
+    //SUELO
+    noStroke();
+    fill(20, 120, 40);
+    rect(0, 0.8 * height, width, 0.2 * height);
+
+    //SOL
+    noStroke();
+    fill(255, 210, 0);
+    circle(xS, yS, dS);
+
+    //LUNA
+    noStroke();
+    fill(200);
+    circle(xL, yL, dL);
+
+    //TEXTO CALENDARIO
+    noStroke();
+    if (xS <= width + rS) {
+      fill(0);     
+    } else {
+      fill(255);   
+    }
+    textSize(20);
+    text("Fecha: (" + dia + ") (" + mes + ") (" + año + ")", 10, 30);
+
+    //MOVIMIENTO
+    xS = xS + vS;
+    xL = xL + vL;
+
+    if (xS >= 2 * width - rS) {
+
+      //POSICIONES
+      xS = -rS;
+      xL = -width - rL;
+
+      // INCREMENTO DE VARIABLE DÍA
+      dia = dia + 1;
+
+      // RESSETEO DÍAS
+      if (dia > 30) {
+        dia = 1;
+        mes = mes + 1;
+      }
+
+      //RESETEO MESES
+      if (mes > 12) {
+        mes = 1;
+        año = año + 1;
+      }
+    }
+  }
+</script>
+</body>
+</html>
