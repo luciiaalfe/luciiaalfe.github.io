@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Tarea 13 — Stickman con teclado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+
+<body>
+<script>
+  // =========================
+  // Estado global (T12)
+  // =========================
+  let xS, yS, dS, rS, vS;   // Sol
+  let xL, yL, dL, rL, vL;   // Luna
+  let dia, mes, anio;       // Calendario
+
+  // =========================
+  // Estado del stickman (T13)
+  // =========================
+  let xP, yP;        // posición personaje (pies)
+  let S;             // tamaño base
+  let vP;            // velocidad horizontal
+
+  let groundY;       // suelo
+  let vY;            // velocidad vertical
+  let jumpV;         // impulso salto
+  let g;             // gravedad
+
+  function setup() {
+    createCanvas(900, 500);
+
+    // -------- SOL --------
+    dS = 0.18 * width;
+    rS = dS / 2;
+    yS = 0.35 * height;
+    xS = -rS;
+    vS = width / 400;
+
+    // -------- LUNA --------
+    dL = dS * 0.5;
+    rL = dL / 2;
+    xL = -width - rL;
+    yL = 0.35 * height;
+    vL = vS;
+
+    // -------- CALENDARIO --------
+    dia  = 1;
+    mes  = 1;
+    anio = 2025;
+
+    // -------- STICKMAN --------
+    groundY = 0.80 * height;
+
+    S  = 0.12 * min(width, height);
+    xP = 0.25 * width;
+    yP = groundY;
+
+    vP = width / 150;
+
+    vY = 0;
+    jumpV = -0.030 * height;
+    g = 0.0016 * height;
+  }
+
+  function draw() {
+
+    // 1) Fondo día / noche
+    if (xS <= width + rS) {
+      background(135, 206, 235);
+    } else {
+      background(0);
+    }
+
+    // 2) Suelo
+    noStroke();
+    fill(20, 120, 40);
+    rect(0, groundY, width, 0.2 * height);
+
+    // 3) Sol
+    noStroke();
+    fill(255, 210, 0);
+    circle(xS, yS, dS);
+
+    // 4) Luna
+    noStroke();
+    fill(200);
+    circle(xL, yL, dL);
+
+    // 5) Calendario
+    noStroke();
+    if (xS <= width + rS) {
+      fill(0);
+    } else {
+      fill(255);
+    }
+    textSize(20);
+    text("Fecha: (" + dia + ") (" + mes + ") (" + anio + ")", 10, 30);
+
+    // =========================
+    // MOVIMIENTO STICKMAN
+    // =========================
+    if (keyIsDown(LEFT_ARROW)) {
+      xP = xP - vP;
+    } else if (keyIsDown(RIGHT_ARROW)) {
+      xP = xP + vP;
+    }
+
+    // Límites laterales
+    if (xP < 0) {
+      xP = 0;
+    }
+    if (xP > width) {
+      xP = width;
+    }
+
+    // Salto (física)
+    vY = vY + g;
+    yP = yP + vY;
+
+    if (yP > groundY) {
+      yP = groundY;
+      vY = 0;
+    }
+
+    // =========================
+    // DIBUJO STICKMAN
+    // =========================
+    let rHead = 0.20 * S;
+    let bodyL = 0.60 * S;
+    let armL  = 0.45 * S;
+    let legL  = 0.55 * S;
+
+    let hipY = yP - legL;
+    let shoulderY = hipY - bodyL;
+    let headY = shoulderY - rHead;
+
+    stroke(255);
+    strokeWeight(0.06 * S);
+    noFill();
+
+    // Cabeza
+    circle(xP, headY, 2 * rHead);
+
+    // Tronco
+    line(xP, shoulderY, xP, hipY);
+
+    // Brazos
+    line(xP - 0.25*S, shoulderY, xP + 0.25*S, shoulderY);
+    line(xP - 0.25*S, shoulderY, xP - 0.25*S, shoulderY + armL);
+    line(xP + 0.25*S, shoulderY, xP + 0.25*S, shoulderY + armL);
+
+    // Piernas
+    line(xP, hipY, xP - 0.18*S, yP);
+    line(xP, hipY, xP + 0.18*S, yP);
+
+    // =========================
+    // MOVIMIENTO SOL + LUNA
+    // =========================
+    xS = xS + vS;
+    xL = xL + vL;
+
+    // Reinicio + calendario
+    if (xS >= 2 * width - rS) {
+      xS = -rS;
+      xL = -width - rL;
+
+      dia = dia + 1;
+
+      if (dia > 30) {
+        dia = 1;
+        mes = mes + 1;
+      }
+
+      if (mes > 12) {
+        mes = 1;
+        anio = anio + 1;
+      }
+    }
+  }
+
+  // =========================
+  // EVENTO DE TECLADO (SALTO)
+  // =========================
+  function keyPressed() {
+    if (keyCode === UP_ARROW) {
+      if (yP === groundY) {
+        vY = jumpV;
+      }
+    }
+  }
+</script>
+</body>
+</html>
