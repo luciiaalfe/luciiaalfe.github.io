@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Tarea 16 — Impacto y puntos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+
+<body>
+<script>
+ 
+  // SOL Y LUNA
+  let xS, yS, dS, rS, vS;
+  let xL, yL, dL, rL, vL;
+  let dia, mes, año;
+
+  // STICKMAN 
+  let xP, yP;
+  let S;
+  let vP;
+
+  let groundY;
+  let vY;
+  let jumpV;
+  let g;
+
+  // DISPARO 
+  let xD, yD;
+  let tD;
+  let vD;
+  let disparoActivo;
+
+  // OBJETIVO 
+  let xO, yO;
+  let wO, hO;
+  let vO;
+
+  // PUNTOS 
+  let puntos;
+
+  function setup() {
+    createCanvas(900, 500);
+
+    // SOL
+    dS = 0.18 * width;
+    rS = dS / 2;
+    yS = 0.35 * height;
+    xS = -rS;
+    vS = width / 400;
+
+    // LUNA
+    dL = dS * 0.5;
+    rL = dL / 2;
+    xL = -width - rL;
+    yL = 0.35 * height;
+    vL = vS;
+
+    // CALENDARIO
+    dia = 1;
+    mes = 1;
+    año = 2025;
+
+    // STICKMAN 
+    groundY = 0.80 * height;
+    S = 0.12 * min(width, height);
+    xP = 0.25 * width;
+    yP = groundY;
+    vP = width / 150;
+
+    vY = 0;
+    jumpV = -0.030 * height;
+    g = 0.0016 * height;
+
+    // DISPARO
+    tD = 0.02 * min(width, height);
+    vD = 0.025 * height;
+    disparoActivo = false;
+
+    // OBJETIVO
+    wO = 0.08 * width;
+    hO = 0.05 * height;
+    yO = 0.25 * height;
+    xO = -wO;
+    vO = random(width / 300, width / 200);
+
+    // PUNTOS
+    puntos = 0;
+  }
+
+  function draw() {
+
+    // 1) CIELO
+    if (xS <= width + rS) {
+      background(135, 206, 235);
+    } else {
+      background(0);
+    }
+
+    // 2) SUELO
+    noStroke();
+    fill(20, 120, 40);
+    rect(0, groundY, width, height);
+
+    // 3) SOL Y LUNA
+    dibujarSol();
+    dibujarLuna();
+
+    // 4) MOVIMIENTO SOL + LUNA + CALENDARIO
+    xS += vS;
+    xL += vL;
+
+    if (xS >= 2 * width - rS) {
+      xS = -rS;
+      xL = -width - rL;
+      actualizarCalendario();
+    }
+
+    // 5) MOVIMIENTO OBJETIVO
+    xO += vO;
+
+    if (xO > width) {
+      xO = -wO;
+      vO = random(width / 300, width / 200);
+    }
+
+    if (xO + wO < 0) {
+      xO = width;
+      vO = -random(width / 300, width / 200);
+    }
+
+    // 6) MOVIMIENTO DISPARO
+    if (disparoActivo) {
+      yD -= vD;
+
+      if (yD < 0) {
+        disparoActivo = false;
+      }
+    }
+
+    // 7) IMPACTO (T16)
+    if (disparoActivo) {
+      if (
+        xD > xO &&
+        xD < xO + wO &&
+        yD > yO &&
+        yD < yO + hO
+      ) {
+        puntos++;
+        disparoActivo = false;
+
+        if (vO > 0) {
+          xO = -wO;
+          vO = random(width / 300, width / 200);
+        } else {
+          xO = width;
+          vO = -random(width / 300, width / 200);
+        }
+      }
+    }
+
+    // 8) DIBUJOS
+    dibujarObjetivo();
+    dibujarDisparo();
+
+    // 9) LÓGICA STICKMAN 
+    if (keyIsDown(LEFT_ARROW)) xP -= vP;
+    else if (keyIsDown(RIGHT_ARROW)) xP += vP;
+
+    xP = constrain(xP, 0, width);
+
+    vY += g;
+    yP += vY;
+
+    if (yP > groundY) {
+      yP = groundY;
+      vY = 0;
+    }
+
+    // 10) DIBUJAR STICKMAN
+    dibujarStickman();
+
+    // 11) HUD
+    dibujarCalendario();
+    dibujarPuntos();
+  }
+
+  // FUNCIONES DE DIBUJO
+  function dibujarSol() {
+    noStroke();
+    fill(255, 210, 0);
+    circle(xS, yS, dS);
+  }
+
+  function dibujarLuna() {
+    noStroke();
+    fill(200);
+    circle(xL, yL, dL);
+  }
+
+  function dibujarObjetivo() {
+    noStroke();
+    fill(255, 0, 0);
+    rect(xO, yO, wO, hO);
+  }
+
+  function dibujarDisparo() {
+    if (disparoActivo) {
+      noStroke();
+      fill(255);
+      circle(xD, yD, tD);
+    }
+  }
+
+  function dibujarStickman() {
+    let rHead = 0.20 * S;
+    let bodyL = 0.60 * S;
+    let armL  = 0.45 * S;
+    let legL  = 0.55 * S;
+
+    let hipY = yP - legL;
+    let shoulderY = hipY - bodyL;
+    let headY = shoulderY - rHead;
+
+    stroke(255);
+    strokeWeight(0.06 * S);
+    noFill();
+
+    circle(xP, headY, 2 * rHead);
+    line(xP, shoulderY, xP, hipY);
+
+    line(xP - 0.25*S, shoulderY, xP + 0.25*S, shoulderY);
+    line(xP - 0.25*S, shoulderY, xP - 0.25*S, shoulderY + armL);
+    line(xP + 0.25*S, shoulderY, xP + 0.25*S, shoulderY + armL);
+
+    line(xP, hipY, xP - 0.18*S, yP);
+    line(xP, hipY, xP + 0.18*S, yP);
+  }
+
+  function dibujarCalendario() {
+    noStroke();
+    fill(xS <= width + rS ? 0 : 255);
+    textSize(20);
+    text("Fecha: (" + dia + ") (" + mes + ") (" + año + ")", 10, 30);
+  }
+
+  function dibujarPuntos() {
+    noStroke();
+    fill(255);
+    textSize(20);
+    text("Puntos: " + puntos, 10, 60);
+  }
+
+  function actualizarCalendario() {
+    dia++;
+    if (dia > 30) {
+      dia = 1;
+      mes++;
+    }
+    if (mes > 12) {
+      mes = 1;
+      año++;
+    }
+  }
+
+  function keyPressed() {
+    if (keyCode === UP_ARROW && yP === groundY) {
+      vY = jumpV;
+    }
+
+    if (key === ' ' && !disparoActivo) {
+      xD = xP;
+      yD = yP - S;
+      disparoActivo = true;
+    }
+  }
+</script>
+</body>
+</html>
